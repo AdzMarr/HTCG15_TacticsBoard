@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Football Playbook & Drill Creator</title>
+  
+  <link rel="manifest" href="manifest.json">
+  
+  <meta name="theme-color" content="#1e293b">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Playbook">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --panel-bg: #1e293b;
+      --text: #f8fafc;
+      --pitch: #166534;
+      --pitch-lines: #ffffff;
+      --accent: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+    /* Updated body to use dynamic viewport height */
+    body { background-color: var(--bg-color); color: var(--text); display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+
+    header { padding: 12px 20px; background-color: var(--panel-bg); border-bottom: 2px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.2rem; margin: 0; }
+    .hint { font-size: 0.85rem; color: #94a3b8; }
+
+    .app-container { display: flex; flex: 1; overflow: hidden; flex-direction: row; }
+
+    /* Canvas Area */
+    .pitch-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; background: #022c22; position: relative; overflow: hidden; padding: 10px; }
+    canvas { background-color: var(--pitch); box-shadow: 0 8px 32px rgba(0,0,0,0.5); border-radius: 4px; touch-action: none; max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* Controls Area (Updated with scrolling fixes) */
+    .sidebar { width: 340px; background: var(--panel-bg); padding: 15px; padding-bottom: 40px; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 20px; border-left: 2px solid #334155; }
+    
+    .section h3 { font-size: 0.9rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; letter-spacing: 0.05em; }
+    
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    
+    button { background: #334155; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    button:hover { background: #475569; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .btn-active { background: var(--accent); color: white; }
+    .btn-active:hover { background: #2563eb; }
+    
+    .btn-record { background: #dc2626; }
+    .btn-record:hover { background: #b91c1c; }
+    .recording-pulse { animation: pulse 1.5s infinite; background: #ef4444 !important; }
+
+    .btn-success { background: #16a34a; }
+    .btn-success:hover { background: #15803d; }
+
+    textarea { width: 100%; height: 80px; background: #0f172a; color: white; border: 1px solid #475569; border-radius: 6px; padding: 10px; resize: none; font-size: 0.9rem; }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Mobile Responsive (Updated viewport proportions) */
+    @media (max-width: 768px) {
+      .app-container { flex-direction: column; }
+      .pitch-wrapper { height: 55dvh; padding: 5px; flex-shrink: 0; }
+      .sidebar { width: 100%; flex: 1; height: auto; border-left: none; border-top: 2px solid #334155; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚽ Playbook Pro</h1>
+    <span class="hint">Double-tap an icon to remove it</span>
+  </header>
+
+  <div class="app-container">
+    <div class="pitch-wrapper">
+      <canvas id="pitchCanvas" width="800" height="550"></canvas>
+    </div>
+
+    <div class="sidebar">
+      
+      <div class="section">
+        <h3>Add Elements</h3>
+        <div class="btn-grid">
+          <button onclick="addToken('red', '1')">🔴 Red Player</button>
+          <button onclick="addToken('blue', 'X')">🔵 Blue Player</button>
+          <button onclick="addToken('ball', '⚽')">⚽ Ball</button>
+          <button onclick="addToken('cone', '▲')">🔶 Cone</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Tactics & Movement</h3>
+        <div class="btn-grid">
+          <button id="drawBtn" onclick="toggleDraw()">✏️ Draw Line</button>
+          <button onclick="clearLines()">🧹 Clear Lines</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Drill Description</h3>
+        <textarea id="drillNotes" placeholder="Write triggers, coaching points, and objectives here..."></textarea>
+      </div>
+
+      <div class="section">
+        <h3>Export Drill</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="videoRecordBtn" class="btn-record" onclick="toggleVideoRecord()">
+            🎥 Record Sequence + Audio
+          </button>
+          
+          <div class="btn-grid">
+            <button id="audioRecordBtn" onclick="toggleAudioRecord()">🎙️ Audio Only</button>
+            <button class="btn-success" onclick="saveStillImage()">📸 Save Still Image</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- CANVAS & PITCH SETUP ---
+    const canvas = document.getElementById("pitchCanvas");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    
+    let tokens = [
+      { id: 1, type: "red", label: "1", x: 100, y: 275, r: 16 },
+      { id: 2, type: "blue", label: "2", x: 700, y: 275, r: 16 },
+      { id: 3, type: "ball", label: "⚽", x: 400, y: 275, r: 12 }
+    ];
+    let lines = [];
+    
+    // State
+    let isDrawing = false;
+    let currentLine = null;
+    let draggedToken = null;
+    let dragOffset = { x: 0, y: 0 };
+    let lastTap = 0;
+
+    function drawPitch() {
+      // Grass
+      ctx.fillStyle = "#166534";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.lineWidth = 3;
+
+      // Pitch Outline
+      ctx.strokeRect(40, 30, canvas.width - 80, canvas.height - 60);
+
+      // Center Line & Circle
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 30);
+      ctx.lineTo(canvas.width / 2, canvas.height - 30);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, canvas.height / 2, 70, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Penalty Areas
+      ctx.strokeRect(40, canvas.height / 2 - 120, 130, 240);
+      ctx.strokeRect(canvas.width - 170, canvas.height / 2 - 120, 130, 240);
+
+      // Goal Areas
+      ctx.strokeRect(40, canvas.height / 2 - 50, 45, 100);
+      ctx.strokeRect(canvas.width - 85, canvas.height / 2 - 50, 45, 100);
+    }
+
+    function render() {
+      drawPitch();
+
+      // Draw Lines
+      ctx.strokeStyle = "#fbbf24"; // Yellow tactical lines
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 6]);
+      lines.forEach(line => {
+        if (line.length < 2) return;
+        ctx.beginPath();
+        ctx.moveTo(line[0].x, line[0].y);
+        for (let i = 1; i < line.length; i++) ctx.lineTo(line[i].x, line[i].y);
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+
+      // Draw Tokens
+      tokens.forEach(t => {
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+        
+        if (t.type === "red") ctx.fillStyle = "#ef4444";
+        else if (t.type === "blue") ctx.fillStyle = "#3b82f6";
+        else if (t.type === "cone") ctx.fillStyle = "#f97316";
+        else if (t.type === "ball") ctx.fillStyle = "#ffffff";
+        
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#ffffff";
+        ctx.stroke();
+
+        ctx.fillStyle = t.type === "ball" ? "#000" : "#fff";
+        ctx.font = `bold ${t.r * 0.9}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(t.label, t.x, t.y);
+      });
+    }
+
+    // --- INTERACTION (TOUCH & MOUSE) ---
+    function getCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    function onPointerDown(e) {
+      const pos = getCoords(e);
+      
+      if (isDrawing) {
+        currentLine = [pos];
+        lines.push(currentLine);
+        return;
+      }
+
+      // Check for double tap to delete
+      const now = Date.now();
+      const isDoubleTap = now - lastTap < 300;
+      lastTap = now;
+
+      for (let i = tokens.length - 1; i >= 0; i--) {
+        const t = tokens[i];
+        if (Math.hypot(t.x - pos.x, t.y - pos.y) <= t.r * 1.5) { // 1.5x hit area for touch
+          if (isDoubleTap) {
+            tokens.splice(i, 1);
+            render();
+            return;
+          }
+          draggedToken = t;
+          dragOffset.x = pos.x - t.x;
+          dragOffset.y = pos.y - t.y;
+          return;
+        }
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!draggedToken && !currentLine) return;
+      e.preventDefault(); // Prevent scrolling while dragging
+      
+      const pos = getCoords(e);
+      if (isDrawing && currentLine) {
+        currentLine.push(pos);
+        render();
+      } else if (draggedToken) {
+        draggedToken.x = Math.max(draggedToken.r, Math.min(canvas.width - draggedToken.r, pos.x - dragOffset.x));
+        draggedToken.y = Math.max(draggedToken.r, Math.min(canvas.height - draggedToken.r, pos.y - dragOffset.y));
+        render();
+      }
+    }
+
+    function onPointerUp() {
+      draggedToken = null;
+      currentLine = null;
+    }
+
+    // Event Listeners
+    canvas.addEventListener("mousedown", onPointerDown);
+    canvas.addEventListener("mousemove", onPointerMove);
+    window.addEventListener("mouseup", onPointerUp);
+    canvas.addEventListener("touchstart", onPointerDown, { passive: false });
+    canvas.addEventListener("touchmove", onPointerMove, { passive: false });
+    window.addEventListener("touchend", onPointerUp);
+
+    // --- CONTROLS ---
+    function addToken(type, defaultLabel) {
+      let label = defaultLabel;
+      let r = 16;
+      if (type === "red" || type === "blue") {
+        label = prompt("Enter player number/initials:", defaultLabel) || defaultLabel;
+      } else if (type === "cone" || type === "ball") {
+        r = 12;
+      }
+      tokens.push({ id: Date.now(), type, label, x: canvas.width/2, y: canvas.height/2, r });
+      render();
+    }
+
+    function toggleDraw() {
+      isDrawing = !isDrawing;
+      const btn = document.getElementById("drawBtn");
+      btn.classList.toggle("btn-active", isDrawing);
+      btn.innerText = isDrawing ? "✋ Move Players" : "✏️ Draw Line";
+    }
+
+    function clearLines() { lines = []; render(); }
+
+    // --- EXPORT: STILL IMAGE WITH TEXT ---
+    function saveStillImage() {
+      const notes = document.getElementById("drillNotes").value.trim();
+      const expCanvas = document.createElement("canvas");
+      const eCtx = expCanvas.getContext("2d");
+      
+      const textHeight = notes ? 120 : 0;
+      expCanvas.width = canvas.width;
+      expCanvas.height = canvas.height + textHeight;
+
+      // Draw Pitch
+      eCtx.drawImage(canvas, 0, 0);
+
+      // Draw Text box at bottom
+      if (notes) {
+        eCtx.fillStyle = "#0f172a";
+        eCtx.fillRect(0, canvas.height, expCanvas.width, textHeight);
+        eCtx.fillStyle = "#3b82f6";
+        eCtx.font = "bold 16px sans-serif";
+        eCtx.fillText("Drill Description & Triggers:", 20, canvas.height + 30);
+        
+        eCtx.fillStyle = "#f8fafc";
+        eCtx.font = "14px sans-serif";
+        // Simple text wrapping simulation
+        const words = notes.split(' ');
+        let line = '';
+        let y = canvas.height + 55;
+        for(let n = 0; n < words.length; n++) {
+          let testLine = line + words[n] + ' ';
+          let metrics = eCtx.measureText(testLine);
+          if (metrics.width > expCanvas.width - 40 && n > 0) {
+            eCtx.fillText(line, 20, y);
+            line = words[n] + ' ';
+            y += 20;
+          } else {
+            line = testLine;
+          }
+        }
+        eCtx.fillText(line, 20, y);
+      }
+
+      const link = document.createElement("a");
+      link.download = `Playbook-Drill-${Date.now()}.png`;
+      link.href = expCanvas.toDataURL("image/png");
+      link.click();
+    }
+
+    // --- RECORDING: VIDEO & AUDIO MULTIMEDIA ---
+    let mediaRecorder;
+    let chunks = [];
+    let isRecordingVideo = false;
+    let isRecordingAudio = false;
+
+    // 1. Video Sequence Record (Canvas Stream + Mic Stream)
+    async function toggleVideoRecord() {
+      const btn = document.getElementById("videoRecordBtn");
+      
+      if (!isRecordingVideo) {
+        try {
+          // Get Audio from Mic
+          const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+          // Get Video from Canvas (30 frames per second)
+          const canvasStream = canvas.captureStream(30);
+          
+          // Combine both into one track
+          const combinedStream = new MediaStream([
+            ...canvasStream.getVideoTracks(),
+            ...audioStream.getAudioTracks()
+          ]);
+
+          mediaRecorder = new MediaRecorder(combinedStream, { mimeType: 'video/webm' });
+          chunks = [];
+
+          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Sequence-Record-${Date.now()}.webm`;
+            link.click();
+            // Stop mic tracks after download
+            audioStream.getTracks().forEach(track => track.stop());
+          };
+
+          mediaRecorder.start();
+          isRecordingVideo = true;
+          btn.classList.add("recording-pulse");
+          btn.innerText = "⏹️ Stop & Save Sequence";
+          
+          // Disable other buttons to prevent collision
+          document.getElementById("audioRecordBtn").disabled = true;
+
+        } catch (err) {
+          alert("Could not start recording. Please ensure microphone permissions are granted.");
+          console.error(err);
+        }
+      } else {
+        mediaRecorder.stop();
+        isRecordingVideo = false;
+        btn.classList.remove("recording-pulse");
+        btn.innerText = "🎥 Record Sequence + Audio";
+        document.getElementById("audioRecordBtn").disabled = false;
+      }
+    }
+
+    // 2. Audio Only Record
+    async function toggleAudioRecord() {
+      const btn = document.getElementById("audioRecordBtn");
+
+      if (!isRecordingAudio) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          chunks = [];
+
+          mediaRecorder.ondataavailable = e => chunks.push(e.data);
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'audio/webm' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Audio-Notes-${Date.now()}.webm`;
+            link.click();
+            stream.getTracks().forEach(track => track.stop());
+          };
+
+          mediaRecorder.start();
+          isRecordingAudio = true;
+          btn.classList.add("recording-pulse");
+          btn.innerText = "⏹️ Stop Audio";
+          document.getElementById("videoRecordBtn").disabled = true;
+        } catch (err) {
+          alert("Microphone access denied.");
+        }
+      } else {
+        mediaRecorder.stop();
+        isRecordingAudio = false;
+        btn.classList.remove("recording-pulse");
+        btn.innerText = "🎙️ Audio Only";
+        document.getElementById("videoRecordBtn").disabled = false;
+      }
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
