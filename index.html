@@ -103,6 +103,106 @@
   border-color: #FFD400;
   box-shadow: 0 0 0 3px rgba(237, 33, 0, 0.9);
 }
+
+  /* =========================================================
+   PLAYER BANK — SHOW ON PITCH CONTROLS
+   ========================================================= */
+
+/* Add breathing room above the "Show on Pitch" heading */
+#bankCard .section-label {
+  margin-top: 22px;
+  margin-bottom: 9px;
+  color: #ED2100;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+}
+
+/* Kit heading should be slightly closer to the kit choices */
+#bankCard .section-label:first-of-type {
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+/* Better space between the kit choices and Show on Pitch */
+#bankCard #ownKitPicker,
+#bankCard #oppKitPicker {
+  margin-bottom: 8px;
+}
+
+/* Layout and spacing for the Off / Opposition On pair */
+#bankCard #oppToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 2px;
+  margin-bottom: 20px;
+}
+
+/* Both buttons: default/off state = white with dark text */
+#bankCard #oppToggle .toggle-btn {
+  min-height: 44px;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #171717;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
+}
+
+/* Selected state: Scarlet red with white text */
+#bankCard #oppToggle .toggle-btn.active {
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #ED2100 0%, #821200 100%);
+  border-color: #ED2100;
+  box-shadow: 0 4px 9px rgba(130, 18, 0, 0.38);
+}
+
+/* Clear hover state */
+#bankCard #oppToggle .toggle-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Formation section: balanced separation after Show on Pitch */
+#bankCard #formationPicker {
+  display: block;
+  width: 100%;
+  min-height: 45px;
+  margin-top: 3px;
+  margin-bottom: 13px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  color: #171717;
+  border: 2px solid #ED2100;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* Put the formation heading closer to its dropdown */
+#bankCard #formationPicker + .bank-actions {
+  margin-top: 0;
+}
+
+/* Space between the formation buttons and player-bank instruction */
+#bankCard .bank-actions {
+  margin-bottom: 14px;
+}
+
+/* Improve the helper instruction below the placement buttons */
+#bankCard .bank-actions + p {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px !important;
+  line-height: 1.35;
+}
   
 </style>
 </head>
