@@ -96,6 +96,31 @@
   border-color: #ED2100;
 }
 
+/* Player list, relocated into the pitch panel */
+#pitchCard #bankList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  max-height:190px;
+  overflow-y:auto;
+  margin-bottom:12px;
+  padding:8px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  background:#F9FAFB;
+}
+
+#pitchCard .bank-player{
+  flex:0 0 auto;
+  min-width:0;
+}
+
+@media (max-width:1080px){
+  #pitchCard #bankList{
+    max-height:160px;
+  }
+}
+  
 </style>
 </head>
 <body>
