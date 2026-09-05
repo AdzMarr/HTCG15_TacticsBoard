@@ -1,0 +1,18 @@
+{
+  "handSignals": [
+    "Arm up, then down — go now / start the move",
+    "Point to the ground — short pass",
+    "Arm sweep sideways — run wide / overlap",
+    "Fist — near post routine",
+    "Open hand — far post routine",
+    "Tap head — expect a headed ball"
+  ],
+  "vocalCommands": [
+    "Man on! — opponent closing in behind you",
+    "Time! — you have space",
+    "Turn! — safe to face forward",
+    "Square! — pass sideways",
+    "Away! — clear the danger",
+    "Held! — keeper has the ball, reset shape"
+  ]
+}
