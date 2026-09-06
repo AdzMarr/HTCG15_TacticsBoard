@@ -1,0 +1,23 @@
+{
+  "type": "htcg15-challenges",
+  "challenges": [
+    {
+      "id": "corner-routine",
+      "title": "Create a corner routine",
+      "desc": "Set up a short or long corner routine that creates a clear shooting or heading chance.",
+      "snapshot": null
+    },
+    {
+      "id": "throw-in-routine",
+      "title": "Create a throw-in routine",
+      "desc": "Plan a throw-in near the box that keeps possession and creates space to attack.",
+      "snapshot": null
+    },
+    {
+      "id": "free-kick-routine",
+      "title": "Create a free kick routine near the box",
+      "desc": "Design a direct or indirect free kick routine just outside the penalty area.",
+      "snapshot": null
+    }
+  ]
+}
