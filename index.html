@@ -7,147 +7,82 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--scarlet:#ED2100;--scarlet-dark:#821200;--black:#08090A;--charcoal:#1B1D20;--gold:#F5C518;--green:#2E7D32;--white:#FFF;--offwhite:#F4F5F7;--muted:#6B7280;--line:#E5E7EB;--radius:18px}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--offwhite);color:#171717}#app{max-width:1320px;margin:auto;padding:16px}header{position:relative;text-align:center;margin-bottom:16px;padding:22px 16px;border-radius:var(--radius);color:#fff;background:linear-gradient(135deg,var(--scarlet),var(--scarlet-dark));box-shadow:0 8px 24px rgba(130,18,0,.28)}#badge{width:50px;height:50px;margin:0 auto 8px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFD54F,#C9820F);color:#3A2400;font-size:20px;font-weight:900;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.25)}h1{margin:4px 0;font-size:26px;letter-spacing:1px;text-transform:uppercase}header p{margin:0;font-size:14px;font-weight:600;opacity:.92}#adminBtn{position:absolute;right:16px;top:16px;border:0;border-radius:22px;padding:8px 16px;background:#fff;color:var(--scarlet-dark);font-weight:800;cursor:pointer}#adminBtn.unlocked{background:var(--black);color:#fff}.panel{margin-bottom:16px;padding:18px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(0,0,0,.08)}.panel h2{margin:0 0 12px;font-size:13px;letter-spacing:1.3px;text-transform:uppercase;font-weight:900}.panel-white{background:#fff}.panel-white h2,.guide h3{color:var(--scarlet)}.panel-black{color:#fff;background:linear-gradient(160deg,#121315,#000)}.panel-black h2{color:var(--scarlet)}.panel-black label{color:#D8D9DB}.panel-red{color:#fff;background:linear-gradient(160deg,#C31A02,var(--scarlet-dark))}.panel-red h2{color:#FFE0D9}.big-btn{border:0;border-radius:12px;padding:12px 18px;color:#fff;cursor:pointer;font-weight:800;font-size:14px;background:linear-gradient(135deg,var(--scarlet),var(--scarlet-dark));box-shadow:0 4px 10px rgba(130,18,0,.3)}.big-btn:hover{transform:translateY(-1px)}.big-btn.black-gold{background:linear-gradient(135deg,#2A2E33,#08090A);color:var(--gold);box-shadow:0 4px 10px rgba(0,0,0,.28)}.big-btn.outline{background:#fff;color:var(--scarlet-dark);border:2px solid var(--scarlet-dark);box-shadow:none}.big-btn.danger{background:#fff;color:#C91D1D;border:2px solid #C91D1D;box-shadow:none}.big-btn:disabled{opacity:.45;cursor:not-allowed}#promptRow,.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}#promptInput{flex:1;min-width:220px;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;background:#F9FAFB}#challengeDesc{min-height:18px;margin-top:8px;color:var(--muted);font-size:13px}.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.chip{border:2px solid #FFC9BB;border-radius:22px;padding:8px 14px;background:#FFF1EE;color:var(--scarlet);font-weight:700;cursor:pointer}.setup-grid{display:flex;gap:20px;flex-wrap:wrap}.setup-group{min-width:190px;flex:1}.setup-group label,.section-label{display:block;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;font-weight:800}.toggle-group{display:flex;gap:8px;flex-wrap:wrap}.toggle-btn{flex:1;min-width:72px;padding:10px;border-radius:10px;text-align:center;font-weight:700;cursor:pointer}.panel-black .toggle-btn{border:1px solid rgba(255,255,255,.15);color:#fff;background:rgba(255,255,255,.08)}.panel-black .toggle-btn.active{border-color:transparent;background:linear-gradient(135deg,var(--scarlet),var(--scarlet-dark))}#mainGrid{display:grid;grid-template-columns:240px minmax(0,1.45fr) minmax(260px,1fr);gap:16px;align-items:start}@media(max-width:1080px){#mainGrid{grid-template-columns:1fr}}.bank-tabs{display:flex;gap:6px;margin-bottom:10px}.bank-tab{flex:1;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.12);color:#fff;text-align:center;font-size:12px;font-weight:800;cursor:pointer}.bank-tab.active{background:#fff;color:var(--scarlet-dark)}.kit-row{display:flex;align-items:center;gap:10px}.kit-swatch{width:36px;height:36px;border:2px solid rgba(255,255,255,.4);border-radius:50%;overflow:hidden;cursor:pointer}.kit-swatch.active{border-color:#fff;box-shadow:0 0 0 2px #fff}#formationPicker,#dashPicker,#speedSelect{width:100%;padding:9px;border:0;border-radius:8px;font-weight:700}#bankList{display:flex;flex-direction:column;gap:6px;max-height:310px;overflow-y:auto}.bank-player{min-height:38px;display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;color:#fff;background:rgba(255,255,255,.16);cursor:grab}.bank-player.placed{opacity:.35;cursor:not-allowed}.shirt{width:26px;height:26px;border-radius:50%;overflow:hidden;flex:0 0 auto}#pitchCard{background:linear-gradient(160deg,#1B1D20,#08090A);color:#fff;border:3px solid var(--scarlet)}#pitchToolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;padding:9px;border:2px solid #3A3A3A;border-radius:12px;background:#08090A}.icon-btn,.mode-btn{min-height:44px;border-radius:10px;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--scarlet),var(--scarlet-dark));border:2px solid var(--scarlet);font-weight:900}.mode-btn{padding:10px 14px;font-size:13px}.icon-btn{width:44px;display:grid;place-items:center;font-size:19px}.mode-btn.active,.icon-btn.active{background:var(--gold);color:#000;border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,197,24,.25)}#dashPicker{width:auto;color:#fff;background:#08090A;border:2px solid var(--scarlet)}input[type=color]{width:42px;height:42px;border:2px solid var(--scarlet);border-radius:10px;cursor:pointer}#canvas-wrap{position:relative;width:100%;overflow:hidden;border:3px solid var(--scarlet);border-radius:14px;background:#000}#pitchCanvas,#drawCanvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);touch-action:none}#drawCanvas.mode-move{cursor:grab}#drawCanvas.mode-edit{cursor:pointer}#drawCanvas.mode-draw{cursor:crosshair}.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;padding:9px 11px;border-left:4px solid var(--gold);border-radius:8px;background:#08090A;color:#fff;font-size:12px;font-weight:700}.dot{width:12px;height:12px;display:inline-block;border:1px solid #fff;border-radius:50%}.pitch-actions,#playbackRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}#framesStrip{display:flex;gap:8px;padding-bottom:6px;overflow-x:auto}.frame-thumb,.frame-add{width:90px;height:63px;flex:0 0 auto;border-radius:10px;overflow:hidden;cursor:pointer}.frame-thumb{border:2px solid var(--line);background:#05070A}.frame-thumb.active{border-color:var(--scarlet)}.frame-thumb img{width:100%;height:100%;object-fit:cover}.frame-add{display:grid;place-items:center;border:2px dashed var(--scarlet);color:var(--scarlet);background:#FFF1EE;font-size:26px}.guide h3{margin:0 0 8px;font-size:13px;text-transform:uppercase}.guide ul{margin:0 0 16px;padding-left:20px;line-height:1.7;font-size:13.5px}.stage-box{margin-bottom:8px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:#F9FAFB}.stage-box b{color:var(--scarlet)}.stage-box textarea{width:100%;min-height:42px;margin-top:6px;padding:8px;border:2px solid var(--line);border-radius:10px;font-family:inherit;resize:vertical}#recStatus{margin-top:8px;color:var(--muted);font-size:13px;font-weight:700}#recStatus.live{color:var(--scarlet)}#recPreview{display:none;max-width:100%;margin-top:10px;border-radius:12px}.modal-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6)}.modal-overlay.show{display:flex}.modal-box{width:min(380px,90vw);max-height:88vh;overflow-y:auto;padding:22px;border-radius:18px;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.3)}.modal-box.wide{width:min(600px,92vw)}.modal-box h3{margin-top:0;color:var(--scarlet)}.modal-box h4{color:var(--scarlet);margin:18px 0 8px}.modal-box label{display:block;margin:10px 0 4px;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase}.modal-box input,.modal-box select,.modal-box textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;font:inherit}.modal-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.modal-row .big-btn{flex:1;min-width:120px}.admin-tabs{display:flex;gap:6px;margin-bottom:14px}.admin-tab{flex:1;padding:9px;border:2px solid var(--line);border-radius:10px;background:#F9FAFB;font-weight:800;cursor:pointer;text-align:center}.admin-tab.active{border-color:var(--scarlet);color:var(--scarlet);background:#FFF1EE}.admin-pane{display:none}.admin-pane.active{display:block}.challenge-manage-item,.guide-manage-item{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;padding:9px 12px;border:2px solid var(--line);border-radius:10px;background:#F9FAFB;font-size:13px}.challenge-manage-item button,.guide-manage-item button{border:0;background:none;cursor:pointer;font-weight:800}.del{color:#C91D1D}.exp{color:var(--scarlet-dark)}footer{padding:4px 0 12px;color:var(--muted);text-align:center;font-size:12px}#pitchCard.fullscreen-mode{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;margin:0;border-radius:0;padding:10px;background:var(--charcoal)}#pitchCard.fullscreen-mode #canvas-wrap{flex:1;height:auto!important}body.fs-active{overflow:hidden}
-/* Player Bank: targeted kit and opposition-control adjustments */
+  /* =========================================================
+   PLAYER BANK: SHOW ON PITCH — SAFE, SCOPED UPDATE
+   ========================================================= */
 
-/* Change only the Player Bank background from red to black */
+/* Make the Player Bank dark without changing other panels */
 #bankCard.panel-red {
   background: linear-gradient(160deg, #1B1D20 0%, #08090A 100%);
 }
 
-/* Provide clear space after the Kit icons */
-#bankCard #ownKitPicker {
-  gap: 10px;
-  margin-bottom: 22px;
+/* Consistent vertical rhythm in Player Bank */
+#bankCard .section-label {
+  margin-top: 18px;
+  margin-bottom: 8px;
 }
 
-/* Kit buttons: preserve the original circular swatch layout */
-#bankCard #ownKitPicker .kit-swatch {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border: 2px solid rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
-  overflow: hidden;
-  box-sizing: border-box;
-  cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 21px;
-  line-height: 1;
+/* The Kit label is the first label: reduce empty space above it */
+#bankCard h2 + .bank-tabs + .section-label {
+  margin-top: 14px;
 }
 
-/* Home: vertical black and Scarlet-red stripes with bold white H */
-#bankCard #kitStripes {
-  color: #FFFFFF;
-  background: repeating-linear-gradient(
-    90deg,
-    #08090A 0 8px,
-    #ED2100 8px 16px
-  );
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+/* Space after the kit row and before "Show on Pitch" */
+#bankCard .kit-row {
+  margin-bottom: 2px;
 }
 
-#bankCard #kitStripes strong {
-  font-weight: 900;
-}
-
-/* Away: yellow with bold black A */
-#bankCard #kitYellow {
-  color: #08090A;
-  background: #FFD400;
-}
-
-#bankCard #kitYellow strong {
-  font-weight: 900;
-}
-
-/* Keep the selected kit obvious */
-#bankCard #ownKitPicker .kit-swatch.active {
-  border-color: #FFFFFF;
-  box-shadow: 0 0 0 2px #ED2100;
-}
-
-/* Opposition controls only: white when inactive */
+/* Show on Pitch button row only */
 #bankCard #oppToggle {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: 8px;
+  margin: 0 0 20px;
 }
 
+/* Default/inactive state: white */
 #bankCard #oppToggle .toggle-btn {
+  min-width: 0;
+  min-height: 42px;
+  padding: 10px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 9px 8px;
-  box-sizing: border-box;
   color: #171717;
   background: #FFFFFF;
   border: 2px solid #FFFFFF;
   border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  box-sizing: border-box;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-/* Opposition controls only: red when active */
+/* Active state: Scarlet red */
 #bankCard #oppToggle .toggle-btn.active {
   color: #FFFFFF;
-  background: linear-gradient(135deg, #ED2100, #821200);
+  background: linear-gradient(135deg, #ED2100 0%, #821200 100%);
   border-color: #ED2100;
 }
 
-/* Player list, relocated into the pitch panel */
-#pitchCard #bankList{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  max-height:190px;
-  overflow-y:auto;
-  margin-bottom:12px;
-  padding:8px;
-  border:2px solid var(--line);
-  border-radius:12px;
-  background:#F9FAFB;
+/* Slight visual feedback without moving surrounding elements */
+#bankCard #oppToggle .toggle-btn:hover {
+  border-color: #ED2100;
 }
 
-#pitchCard .bank-player{
-  flex:0 0 auto;
-  min-width:0;
+/* Formation label should sit directly after the button group */
+#bankCard #oppToggle + .section-label {
+  margin-top: 0;
+  margin-bottom: 8px;
 }
 
-@media (max-width:1080px){
-  #pitchCard #bankList{
-    max-height:160px;
-  }
+/* Give the formation dropdown clear spacing underneath */
+#bankCard #formationPicker {
+  display: block;
+  margin-bottom: 16px;
 }
-
-#kitBank{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:12px;
-  padding:10px;
-  border:2px solid var(--line);
-  border-radius:12px;
-  background:#F9FAFB;
-}
-.kit-chip{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  width:70px;
-  cursor:grab;
-  font-size:10px;
-  font-weight:700;
-  text-align:center;
-  color:#171717;
-}
-.kit-chip canvas{
-  border-radius:50%;
-  overflow:hidden;
-}
-  
 </style>
 </head>
 <body>
@@ -156,10 +91,9 @@
 <section class="panel panel-white"><h2>Your Challenge</h2><div id="promptRow"><input id="promptInput" placeholder="Pick a challenge below" readonly><button class="big-btn outline" id="btnResetChallenge">Reset Challenge</button><button class="big-btn black-gold" id="btnSavePlan">Save My Plan</button><button class="big-btn outline" id="btnLoadPlan">Load My Plan</button><input id="loadPlanInput" type="file" accept="application/json" style="display:none"><button class="big-btn black-gold" id="btnExportPdf">Export Plan as PDF</button><button class="big-btn danger" id="btnManageChallenges" style="display:none">Manage Admin Settings</button></div><div id="challengeDesc"></div><div class="chip-row" id="promptChips"></div></section>
 <section class="panel panel-black"><h2>Pitch Setup</h2><div class="setup-grid"><div class="setup-group"><label>Pitch view</label><div class="toggle-group" id="pitchViewToggle"><div class="toggle-btn active" data-val="half">Half Pitch</div><div class="toggle-btn" data-val="full">Full Pitch</div></div></div><div class="setup-group"><label>Format</label><div class="toggle-group" id="formatToggle"><div class="toggle-btn active" data-val="9v9">9 v 9</div><div class="toggle-btn" data-val="11v11">11 v 11</div></div></div><div class="setup-group" id="orientationGroup"><label>Our team is...</label><div class="toggle-group" id="orientationToggle"><div class="toggle-btn active" data-val="attacking">Attacking</div><div class="toggle-btn" data-val="defending">Defending</div></div></div></div><p id="orientationHint" style="font-size:12px;color:#D8D9DB;margin:10px 0 0"></p></section>
 <div id="mainGrid">
-<section class="panel panel-red" id="bankCard"><h2>Player Bank</h2></div><div class="section-label">Kit</div><div class="kit-row" id="ownKitPicker"><div class="kit-swatch active" id="kitStripes" title="Black and Scarlet stripes"></div><div class="kit-swatch" id="kitYellow" title="Yellow kit"></div></div><div class="kit-row" id="oppKitPicker" style="display:none"><input type="color" id="oppColorPicker" value="#ff9f43"><span>Pick any colour</span></div><div class="section-label">Show on Pitch</div><div class="toggle-group" id="oppToggle"><div class="toggle-btn active" data-val="off">Opposition Off</div><div class="toggle-btn" data-val="on">Opposition On</div></div><div class="bank-actions"><button class="big-btn outline" id="btnClearTeamFromPitch">Clear From Pitch</button></div></section>
+<section class="panel panel-red" id="bankCard"><h2>Player Bank</h2><div class="bank-tabs"><div class="bank-tab active" data-team="own">HTCG15</div><div class="bank-tab" data-team="opp">Opposition</div></div><div class="section-label">Kit</div><div class="kit-row" id="ownKitPicker"><div class="kit-swatch active" id="kitStripes" title="Black and Scarlet stripes"></div><div class="kit-swatch" id="kitYellow" title="Yellow kit"></div></div><div class="kit-row" id="oppKitPicker" style="display:none"><input type="color" id="oppColorPicker" value="#ff9f43"><span>Pick any colour</span></div><div class="section-label">Show on Pitch</div><div class="toggle-group" id="oppToggle"><div class="toggle-btn active" data-val="off">Off</div><div class="toggle-btn" data-val="on">Opposition On</div></div><div class="section-label">Formation</div><select id="formationPicker"></select><div class="bank-actions"><button class="big-btn black-gold" id="btnPlaceFormation">Place Whole Team</button><button class="big-btn outline" id="btnClearTeamFromPitch">Clear From Pitch</button></div><p style="font-size:11px">Drag a player onto the pitch into their position.</p><div id="bankList"></div></section>
 <div>
-<section class="panel" id="pitchCard"><div id="pitchToolbar"><p style="font-size:11px;margin:0 0 8px;color:rgba(255,255,255,.85)">Drag a kit onto the pitch to add a player.</p><div id="kitBank"><div class="kit-chip" draggable="true" data-kind="home-gk" title="Home Goalkeeper"><canvas width="31" height="31"></canvas><span>Home GK</span></div><div class="kit-chip" draggable="true" data-kind="home-stripes" title="Home Player"><canvas width="31" height="31"></canvas><span>Home Kit</span></div><div class="kit-chip" draggable="true" data-kind="home-yellow" title="Home Player (Away Kit)"><canvas width="31" height="31"></canvas><span>Away Kit</span></div><div class="kit-chip" draggable="true" data-kind="opp-gk" title="Opposition Goalkeeper"><canvas width="31" height="31"></canvas><span>Opposition GK</span></div><div class="kit-chip" draggable="true" data-kind="opp-player" title="Opposition Player"><canvas width="31" height="31"></canvas><span>Opposition Player</span></div>
-</div></div><button class="mode-btn active" data-mode="move">Move</button><button class="mode-btn" data-mode="edit">Edit</button><button class="mode-btn" data-mode="draw">Draw</button><span style="width:1px;height:30px;background:rgba(255,255,255,.2)"></span><button class="icon-btn active" data-tool="pen" title="Freehand draw">✎</button><button class="icon-btn" data-tool="line" title="Straight line">━</button><button class="icon-btn" data-tool="arrow" title="Arrow (pass or run)">→</button><button class="icon-btn" data-tool="zone" title="Zone box">□</button><button class="icon-btn" data-tool="eraser" title="Eraser">⌫</button><select id="dashPicker"><option value="solid">Solid line</option><option value="dashed">Dashed line</option></select><input type="color" id="colorPicker" value="#F5C518"><button class="icon-btn" id="btnUndo" title="Undo">↶</button><button class="icon-btn" id="btnAddBall" title="Add ball">⚽</button><button class="icon-btn" id="btnFullscreen" title="Full screen pitch">⛶</button></div><div id="canvas-wrap"><canvas id="pitchCanvas" width="1000" height="700"></canvas><canvas id="drawCanvas" width="1000" height="700" class="mode-move"></canvas></div><div class="legend"><span><i class="dot" style="background:#2ECFAE"></i> Goalkeeper</span><span>Move = drag players and ball. Edit = change name, number or position. Draw = use the drawing tools.</span></div><div class="pitch-actions"><button class="big-btn black-gold" id="btnSaveImage">Save Pitch Image (PNG)</button><button class="big-btn outline" id="btnClearDraw">Clear Drawing</button><button class="big-btn danger" id="btnClearAll">Clear Whole Pitch</button></div></section>
+<section class="panel" id="pitchCard"><div id="pitchToolbar"><button class="mode-btn active" data-mode="move">Move</button><button class="mode-btn" data-mode="edit">Edit</button><button class="mode-btn" data-mode="draw">Draw</button><span style="width:1px;height:30px;background:rgba(255,255,255,.2)"></span><button class="icon-btn active" data-tool="pen" title="Freehand draw">✎</button><button class="icon-btn" data-tool="line" title="Straight line">━</button><button class="icon-btn" data-tool="arrow" title="Arrow (pass or run)">→</button><button class="icon-btn" data-tool="zone" title="Zone box">□</button><button class="icon-btn" data-tool="eraser" title="Eraser">⌫</button><select id="dashPicker"><option value="solid">Solid line</option><option value="dashed">Dashed line</option></select><input type="color" id="colorPicker" value="#F5C518"><button class="icon-btn" id="btnUndo" title="Undo">↶</button><button class="icon-btn" id="btnAddBall" title="Add ball">⚽</button><button class="icon-btn" id="btnFullscreen" title="Full screen pitch">⛶</button></div><div id="canvas-wrap"><canvas id="pitchCanvas" width="1000" height="700"></canvas><canvas id="drawCanvas" width="1000" height="700" class="mode-move"></canvas></div><div class="legend"><span><i class="dot" style="background:#2ECFAE"></i> Goalkeeper</span><span>Move = drag players and ball. Edit = change name, number or position. Draw = use the drawing tools.</span></div><div class="pitch-actions"><button class="big-btn black-gold" id="btnSaveImage">Save Pitch Image (PNG)</button><button class="big-btn outline" id="btnClearDraw">Clear Drawing</button><button class="big-btn danger" id="btnClearAll">Clear Whole Pitch</button></div></section>
 <section class="panel panel-white"><h2>Animation Frames</h2><p>Set up a position, tap + to save it as a frame, then build a simple animation.</p><div id="framesStrip"></div><div id="playbackRow"><button class="big-btn black-gold" id="btnPlay">Play Animation</button><button class="big-btn outline" id="btnStopPlay">Stop</button><button class="big-btn outline" id="btnDeleteFrame">Delete Selected Frame</button><b>Speed:</b><select id="speedSelect" style="width:auto"><option value="1200">Slow</option><option value="800" selected>Normal</option><option value="400">Fast</option></select></div></section>
 <section class="panel panel-white"><h2>Record Yourself Explaining It</h2><p>Record your screen and voice to talk through your routine.</p><div class="row"><button class="big-btn record" id="btnStartRecord">Start Screen + Audio Recording</button><button class="big-btn outline" id="btnStopRecord" disabled>Stop Recording</button></div><div id="recStatus">Not recording.</div><video id="recPreview" controls></video><div id="recDownloadWrap"></div></section>
 </div>
@@ -189,56 +123,9 @@ function xy(e){let r=dc.getBoundingClientRect(),t=e.touches?e.touches[0]:e;retur
 function setMode(m){state.mode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));dc.className='mode-'+m}document.querySelectorAll('.mode-btn').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));document.querySelectorAll('.icon-btn[data-tool]').forEach(b=>b.onclick=()=>{state.tool=b.dataset.tool;document.querySelectorAll('.icon-btn[data-tool]').forEach(x=>x.classList.remove('active'));b.classList.add('active');setMode('draw')});dashPicker.onchange=e=>state.dash=e.target.value;colorPicker.oninput=e=>state.colour=e.target.value;btnUndo.onclick=()=>{state.strokes.pop();redraw()};btnClearDraw.onclick=()=>{state.strokes=[];redraw()};btnClearAll.onclick=()=>{if(confirm('Clear all players, ball and drawing from the pitch?')){state.players=[];state.strokes=[];state.bank.own.forEach(x=>x.placed=false);state.bank.opp.forEach(x=>x.placed=false);drawPlayers();redraw();renderBank()}};btnAddBall.onclick=()=>{state.players.push({x:PITCH_W/2,y:PITCH_H/2,type:'ball'});drawPlayers()};
 function edit(p){state.editing=p;editNumber.value=p.number;editName.value=p.name;editPosition.value=p.position;playerModal.classList.add('show')}btnSavePlayer.onclick=()=>{let p=state.editing;p.number=editNumber.value;p.name=editName.value;p.position=editPosition.value;playerModal.classList.remove('show');drawPlayers();renderBank()};btnCancelPlayer.onclick=()=>playerModal.classList.remove('show');btnRemovePlayer.onclick=()=>{let p=state.editing;state.players=state.players.filter(x=>x!==p);let b=state.bank[p.team].find(x=>x.id===p.bankId);if(b)b.placed=false;playerModal.classList.remove('show');drawPlayers();renderBank()};
 btnFullscreen.onclick=()=>{state.fullscreen=!state.fullscreen;pitchCard.classList.toggle('fullscreen-mode',state.fullscreen);document.body.classList.toggle('fs-active',state.fullscreen);setTimeout(resize,20)};btnSaveImage.onclick=()=>{let c=merged();let a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='htcg15-playbook-pitch.png';a.click()};function merged(){let c=document.createElement('canvas');c.width=PITCH_W;c.height=PITCH_H;let x=c.getContext('2d');x.drawImage(pc,0,0);x.drawImage(dc,0,0);return c}
-function renderBank(){let w=bankList;w.innerHTML='';state.bank[state.activeTeam].forEach(b=>{let d=document.createElement('div');d.className='bank-player'+(b.placed?' placed':'');d.draggable=!b.placed;let c=document.createElement('canvas');c.width=c.height=31;let x=c.getContext('2d');kit(x,15.5,15.5,14,b.team,b.position);x.fillStyle=b.team==='own'&&state.kit==='yellow'&&b.position!=='GK'?'#111':'white';x.font='bold 12px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(b.number,15.5,15.5);d.appendChild(c);if(b.name)d.append(' '+b.name);d.ondragstart=e=>e.dataTransfer.setData('player',b.id);w.appendChild(d)})}document.querySelectorAll('.bank-tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.bank-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');state.activeTeam=t.dataset.team;ownKitPicker.style.display=state.activeTeam==='own'?'flex':'none';oppKitPicker.style.display=state.activeTeam==='opp'?'flex':'none';renderBank()});dc.ondragover=e=>e.preventDefault();dc.ondrop=e=>{e.preventDefault();let id=e.dataTransfer.getData('player'),b=state.bank[state.activeTeam].find(x=>x.id===id);if(!b||b.placed)return;let q=xy(e);state.players.push({x:q.x,y:q.y,number:b.number,name:b.name,position:b.position,team:b.team,bankId:b.id,type:'player'});b.placed=true;drawPlayers();renderBank()};
-const KIT_KINDS = {
-  'home-gk':      { team:'own', position:'GK' },
-  'home-stripes': { team:'own', position:'MF', kit:'stripes' },
-  'home-yellow':  { team:'own', position:'MF', kit:'yellow' },
-  'opp-gk':       { team:'opp', position:'GK' },
-  'opp-player':   { team:'opp', position:'MF' }
-};
-
-function renderKitBank(){
-  document.querySelectorAll('#kitBank .kit-chip').forEach(chip=>{
-    const kind = chip.dataset.kind;
-    const info = KIT_KINDS[kind];
-    const c = chip.querySelector('canvas');
-    const x = c.getContext('2d');
-    x.clearRect(0,0,31,31);
-    const savedKit = state.kit;
-    if(info.kit) state.kit = info.kit;
-    kit(x, 15.5, 15.5, 14, info.team, info.position);
-    state.kit = savedKit;
-  });
-}
-
-document.querySelectorAll('#kitBank .kit-chip').forEach(chip=>{
-  chip.ondragstart = e => e.dataTransfer.setData('kitKind', chip.dataset.kind);
-});
-
-dc.ondragover = e => e.preventDefault();
-dc.ondrop = e => {
-  e.preventDefault();
-  const kind = e.dataTransfer.getData('kitKind');
-  if(!kind) return;
-  const info = KIT_KINDS[kind];
-  if(!info) return;
-  let q = xy(e);
-  state.players.push({
-    x:q.x, y:q.y,
-    number:'', name:'',
-    position:info.position,
-    team:info.team,
-    kitOverride: info.kit || null,
-    type:'player'
-  });
-  drawPlayers();
-};
-
-btnClearTeamFromPitch.onclick = () => {
-  state.players = [];
-  drawPlayers();
-};
+function renderBank(){let w=bankList;w.innerHTML='';state.bank[state.activeTeam].forEach(b=>{let d=document.createElement('div');d.className='bank-player'+(b.placed?' placed':'');d.draggable=!b.placed;let c=document.createElement('canvas');c.width=c.height=26;let x=c.getContext('2d');kit(x,13,13,12,b.team,b.position);x.fillStyle=b.team==='own'&&state.kit==='yellow'&&b.position!=='GK'?'#111':'white';x.font='bold 10px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(b.number,13,13);d.appendChild(c);if(b.name)d.append(' '+b.name);d.ondragstart=e=>e.dataTransfer.setData('player',b.id);w.appendChild(d)})}document.querySelectorAll('.bank-tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.bank-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');state.activeTeam=t.dataset.team;ownKitPicker.style.display=state.activeTeam==='own'?'flex':'none';oppKitPicker.style.display=state.activeTeam==='opp'?'flex':'none';renderBank()});dc.ondragover=e=>e.preventDefault();dc.ondrop=e=>{e.preventDefault();let id=e.dataTransfer.getData('player'),b=state.bank[state.activeTeam].find(x=>x.id===id);if(!b||b.placed)return;let q=xy(e);state.players.push({x:q.x,y:q.y,number:b.number,name:b.name,position:b.position,team:b.team,bankId:b.id,type:'player'});b.placed=true;drawPlayers();renderBank()};
+function formations(){formationPicker.innerHTML=Object.keys(FORMATIONS[state.format]).map(x=>'<option>'+x+'</option>').join('')}btnPlaceFormation.onclick=()=>{let a=FORMATIONS[state.format][formationPicker.value],team=state.activeTeam;state.players=state.players.filter(p=>p.team!==team);state.bank[team].forEach(b=>b.placed=false);a.forEach((p,i)=>{let b=state.bank[team][i],x=p[0]*PITCH_W,y=p[1]*PITCH_H;if(team==='opp'){if(state.view==='full')x=PITCH_W-x;else y=PITCH_H-y}if(state.view==='half'&&state.orientation==='defending'&&team==='own')y=PITCH_H-y;state.players.push({x,y,number:b.number,name:b.name,position:b.position,team,bankId:b.id,type:'player'});b.placed=true});drawPlayers();renderBank()};btnClearTeamFromPitch.onclick=()=>{state.players=state.players.filter(p=>p.team!==state.activeTeam);state.bank[state.activeTeam].forEach(b=>b.placed=false);drawPlayers();renderBank()};
+function setToggles(id,key,cb){document.getElementById(id).onclick=e=>{let b=e.target.closest('.toggle-btn');if(!b)return;document.querySelectorAll('#'+id+' .toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');state[key]=b.dataset.val;cb&&cb()}}setToggles('pitchViewToggle','view',()=>{PITCH_H=state.view==='half'?620:700;pc.height=PITCH_H;dc.height=PITCH_H;resize();drawPlayers()});setToggles('formatToggle','format',()=>{initBanks();state.players=[];formations();drawPlayers();renderBank()});setToggles('orientationToggle','orientation');setToggles('oppToggle','showOpp',()=>{state.showOpp=state.showOpp==='on';if(!state.showOpp){state.players=state.players.filter(p=>p.team!=='opp');state.bank.opp.forEach(b=>b.placed=false);drawPlayers();renderBank()}});oppColorPicker.oninput=e=>{state.oppColor=e.target.value;drawPlayers();renderBank()};kitStripes.onclick=()=>{state.kit='stripes';kitStripes.classList.add('active');kitYellow.classList.remove('active');drawPlayers();renderBank()};kitYellow.onclick=()=>{state.kit='yellow';kitYellow.classList.add('active');kitStripes.classList.remove('active');drawPlayers();renderBank()};
 function renderGuides(){handSignalsList.innerHTML=state.hand.map(x=>'<li>'+x+'</li>').join('');vocalCommandsList.innerHTML=state.vocal.map(x=>'<li>'+x+'</li>').join('')}function chips(){promptChips.innerHTML=state.challenges.map(c=>'<button class="chip" data-id="'+c.id+'">'+c.title+'</button>').join('');document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>loadChallenge(b.dataset.id))}function loadChallenge(id){let c=state.challenges.find(x=>x.id===id);state.activeChallenge=c;promptInput.value=c.title;challengeDesc.textContent=c.desc||'';if(c.snapshot){state.players=JSON.parse(JSON.stringify(c.snapshot.players));state.strokes=JSON.parse(JSON.stringify(c.snapshot.strokes));drawPlayers();redraw()}}btnResetChallenge.onclick=()=>{if(state.activeChallenge){state.players=[];state.strokes=[];state.bank.own.forEach(x=>x.placed=false);state.bank.opp.forEach(x=>x.placed=false);if(state.activeChallenge.snapshot){state.players=JSON.parse(JSON.stringify(state.activeChallenge.snapshot.players));state.strokes=JSON.parse(JSON.stringify(state.activeChallenge.snapshot.strokes))}stageStart.value='';stageMiddle.value='';stageEnd.value='';drawPlayers();redraw();renderBank()}};
 function savePlan(){let plan={type:'htcg15-player-plan',version:1,savedAt:new Date().toISOString(),challenge:state.activeChallenge||null,pitch:{view:state.view,format:state.format,orientation:state.orientation},teams:{kit:state.kit,oppColor:state.oppColor},players:state.players,strokes:state.strokes,frames:state.frames,written:{start:stageStart.value,middle:stageMiddle.value,end:stageEnd.value}};download(plan,'htcg15-my-plan.json')}btnSavePlan.onclick=savePlan;btnLoadPlan.onclick=()=>loadPlanInput.click();loadPlanInput.onchange=()=>{let r=new FileReader();r.onload=()=>{try{let p=JSON.parse(r.result);if(p.type!=='htcg15-player-plan')throw Error();state.view=p.pitch.view;state.format=p.pitch.format;state.orientation=p.pitch.orientation;state.kit=p.teams.kit;state.oppColor=p.teams.oppColor;state.players=p.players||[];state.strokes=p.strokes||[];state.frames=p.frames||[];state.activeChallenge=p.challenge;promptInput.value=p.challenge?.title||'My Saved Plan';challengeDesc.textContent=p.challenge?.desc||'';stageStart.value=p.written?.start||'';stageMiddle.value=p.written?.middle||'';stageEnd.value=p.written?.end||'';PITCH_H=state.view==='half'?620:700;pc.height=PITCH_H;dc.height=PITCH_H;initBanks();state.players.forEach(x=>{if(x.bankId){let b=state.bank[x.team].find(z=>z.id===x.bankId);if(b)b.placed=true}});formations();drawPlayers();redraw();renderBank();frames();resize()}catch(e){alert('That file is not a valid HTCG15 saved plan.')}};r.readAsText(loadPlanInput.files[0])};
 async function exportPdf(){if(!window.jspdf){alert('PDF library is still loading. Please try again in a few seconds.');return}let {jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'}),img=merged().toDataURL('image/png'),title=promptInput.value||'HTCG15 Player Playbook';doc.setFillColor(237,33,0);doc.rect(0,0,297,20,'F');doc.setTextColor(255,255,255);doc.setFontSize(17);doc.text('HTCG15 PLAYER PLAYBOOK',12,13);doc.setFontSize(11);doc.text(title,12,28);doc.setTextColor(30,30,30);doc.setFontSize(9);let desc=doc.splitTextToSize(challengeDesc.textContent||'',270);doc.text(desc,12,34);doc.addImage(img,'PNG',12,45,180,112);doc.setFontSize(12);doc.setTextColor(237,33,0);doc.text('PLAYER EXPLANATION',202,50);doc.setTextColor(30,30,30);doc.setFontSize(10);let y=60;for(let [h,t] of [['1. Start',stageStart.value],['2. Middle',stageMiddle.value],['3. End',stageEnd.value]]){doc.setTextColor(237,33,0);doc.setFont(undefined,'bold');doc.text(h,202,y);doc.setFont(undefined,'normal');doc.setTextColor(30,30,30);let lines=doc.splitTextToSize(t||'No response entered.',80);doc.text(lines,202,y+6);y+=Math.max(25,lines.length*5+12)}doc.setFontSize(8);doc.setTextColor(100,100,100);doc.text('Exported '+new Date().toLocaleString(),12,200);doc.save((title.replace(/[^a-z0-9]+/gi,'_')||'htcg15_plan')+'.pdf')}btnExportPdf.onclick=exportPdf;
